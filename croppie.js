@@ -805,23 +805,15 @@
             transform;
 
         function assignTransformCoordinates(deltaX, deltaY) {
-            var imgRect = self.elements.preview.getBoundingClientRect(),
-                top = transform.y + deltaY,
-                left = transform.x + deltaX;
+            var imgRect = self.elements.preview.getBoundingClientRect();
 
             if (self.options.enforceBoundary) {
-                if (vpRect.top > imgRect.top + deltaY && vpRect.bottom < imgRect.bottom + deltaY) {
-                    transform.y = top;
-                }
+                deltaY = Math.max(Math.min(vpRect.top - imgRect.top, deltaY), vpRect.bottom - imgRect.bottom);
+                deltaX = Math.max(Math.min(vpRect.left - imgRect.left, deltaX), vpRect.right - imgRect.right);
+            }
 
-                if (vpRect.left > imgRect.left + deltaX && vpRect.right < imgRect.right + deltaX) {
-                    transform.x = left;
-                }
-            }
-            else {
-                transform.y = top;
-                transform.x = left;
-            }
+            transform.y += deltaY;
+            transform.x += deltaX;
         }
 
         function toggleGrabState(isDragging) {
